@@ -1,110 +1,251 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  SafeAreaView,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useTaskContext } from '../../context/TaskContext';
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+export default function AnalyticsScreen() {
+  const {
+    tasks,
+    getTasksByFilter,
+    getTasksByPriority,
+    clearCompletedTasks,
+  } = useTaskContext();
 
-export default function TabTwoScreen() {
+  const activeTasks = getTasksByFilter('active');
+  const completedTasks = getTasksByFilter('completed');
+  const highPriorityTasks = getTasksByPriority('high');
+  const mediumPriorityTasks = getTasksByPriority('medium');
+  const lowPriorityTasks = getTasksByPriority('low');
+
+  const completionRate = tasks.length > 0 ? (completedTasks.length / tasks.length) * 100 : 0;
+  const overdueTasks = activeTasks.filter(task => 
+    task.dueDate && new Date() > task.dueDate
+  );
+
+  const handleClearAllTasks = () => {
+    Alert.alert(
+      'Clear All Tasks',
+      'Are you sure you want to delete all tasks? This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Clear All', style: 'destructive', onPress: () => {
+          // This would need to be implemented in the context
+          Alert.alert('Not implemented', 'This feature will be added soon!');
+        }},
+      ]
+    );
+  };
+
+  const handleExportTasks = () => {
+    Alert.alert('Export Tasks', 'This feature will be added soon!');
+  };
+
+  const renderStatCard = (title: string, value: string | number, subtitle?: string, color = '#007AFF') => (
+    <View style={styles.statCard}>
+      <Text style={styles.statCardTitle}>{title}</Text>
+      <Text style={[styles.statCardValue, { color }]}>{value}</Text>
+      {subtitle && <Text style={styles.statCardSubtitle}>{subtitle}</Text>}
+    </View>
+  );
+
+  const renderPrioritySection = () => (
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>Priority Breakdown</Text>
+      <View style={styles.priorityGrid}>
+        <View style={[styles.priorityCard, { backgroundColor: '#ff4444' }]}>
+          <Text style={styles.priorityLabel}>High</Text>
+          <Text style={styles.priorityCount}>{highPriorityTasks.length}</Text>
+        </View>
+        <View style={[styles.priorityCard, { backgroundColor: '#ffaa00' }]}>
+          <Text style={styles.priorityLabel}>Medium</Text>
+          <Text style={styles.priorityCount}>{mediumPriorityTasks.length}</Text>
+        </View>
+        <View style={[styles.priorityCard, { backgroundColor: '#44ff44' }]}>
+          <Text style={styles.priorityLabel}>Low</Text>
+          <Text style={styles.priorityCount}>{lowPriorityTasks.length}</Text>
+        </View>
+      </View>
+    </View>
+  );
+
+  const renderActionButton = (title: string, icon: string, onPress: () => void, color = '#007AFF') => (
+    <TouchableOpacity style={[styles.actionButton, { borderColor: color }]} onPress={onPress}>
+      <Ionicons name={icon as any} size={20} color={color} />
+      <Text style={[styles.actionButtonText, { color }]}>{title}</Text>
+    </TouchableOpacity>
+  );
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Analytics & Settings</Text>
+      </View>
+      <ScrollView style={styles.scrollContainer}>
+
+      <View style={styles.statsGrid}>
+        {renderStatCard('Total Tasks', tasks.length, 'All tasks')}
+        {renderStatCard('Active Tasks', activeTasks.length, 'In progress')}
+        {renderStatCard('Completed', completedTasks.length, `${completionRate.toFixed(1)}% completion`)}
+        {renderStatCard('Overdue', overdueTasks.length, 'Past due date', '#ff4444')}
+      </View>
+
+      {renderPrioritySection()}
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Actions</Text>
+        <View style={styles.actionGrid}>
+          {renderActionButton('Clear Completed', 'trash-outline', clearCompletedTasks, '#ff4444')}
+          {renderActionButton('Export Tasks', 'download-outline', handleExportTasks)}
+          {renderActionButton('Clear All Tasks', 'trash', handleClearAllTasks, '#ff4444')}
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>About</Text>
+        <View style={styles.aboutCard}>
+          <Text style={styles.aboutText}>
+            Task Manager is a simple and efficient way to organize your daily tasks. 
+            Features include priority levels, due dates, and persistent storage.
+          </Text>
+          <Text style={styles.versionText}>Version 1.0.0</Text>
+        </View>
+      </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
   },
-  titleContainer: {
+  scrollContainer: {
+    flex: 1,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  statsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 16,
+    gap: 12,
+  },
+  statCard: {
+    backgroundColor: '#fff',
+    padding: 16,
+    borderRadius: 12,
+    flex: 1,
+    minWidth: '45%',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  statCardTitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+  },
+  statCardValue: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  statCardSubtitle: {
+    fontSize: 12,
+    color: '#999',
+    marginTop: 4,
+  },
+  section: {
+    margin: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 12,
+  },
+  priorityGrid: {
     flexDirection: 'row',
     gap: 8,
+  },
+  priorityCard: {
+    flex: 1,
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  priorityLabel: {
+    fontSize: 12,
+    color: '#fff',
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  priorityCount: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  actionGrid: {
+    gap: 12,
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  actionButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 12,
+  },
+  aboutCard: {
+    backgroundColor: '#fff',
+    padding: 16,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  aboutText: {
+    fontSize: 14,
+    color: '#666',
+    lineHeight: 20,
+    marginBottom: 12,
+  },
+  versionText: {
+    fontSize: 12,
+    color: '#999',
+    textAlign: 'center',
   },
 });
