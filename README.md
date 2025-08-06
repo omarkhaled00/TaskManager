@@ -96,20 +96,58 @@ TaskManager/
 
 ## Screenshots
 
-### Main Task List
-- Clean task interface with priority indicators
-- Filter buttons for different task states
-- Quick actions for editing and deleting tasks
+The Task Manager app features a clean, modern interface with intuitive navigation and visual feedback.
 
-### Analytics Dashboard
-- Task statistics and completion rates
-- Priority breakdown visualization
-- Bulk actions for task management
+### 📱 Main Task List Screen
+![Task Manager Main Screen](screenshots/main-screen.jpeg)
+- **Clean Interface**: Modern header with "Task Manager" title and prominent blue add button
+- **Task Statistics**: Real-time counters showing Total, Active, and Completed tasks
+- **Smart Filtering**: Easy-to-use filter buttons (All, Active, Completed) with visual selection
+- **Task Cards**: Each task displays:
+  - Checkbox for quick completion toggle
+  - Task title and description
+  - Color-coded priority badges (High: Red, Medium: Orange, Low: Green)
+  - Due dates in readable format
+  - Edit and delete actions with intuitive icons
 
-### Add/Edit Task Form
-- Intuitive form with validation
-- Custom date picker interface
-- Priority selection with visual feedback
+### 📊 Analytics Dashboard
+![Analytics Dashboard](screenshots/analytics-screen.jpeg)
+- **Comprehensive Statistics**: Four key metrics cards showing:
+  - Total Tasks count
+  - Active Tasks (in progress)
+  - Completed Tasks with percentage
+  - Overdue Tasks for priority management
+- **Priority Breakdown**: Visual priority distribution with color-coded cards
+- **Real-time Updates**: Statistics update automatically as tasks change
+- **Clean Layout**: Well-spaced cards with clear typography and visual hierarchy
+
+### ✨ Key Visual Features
+- **Consistent Design**: Unified color scheme and typography throughout
+- **Responsive Layout**: Adapts perfectly to different screen sizes
+- **Visual Feedback**: Clear indication of selected states and interactions
+- **Modern UI**: Clean cards, proper spacing, and professional appearance
+- **Color Coding**: Intuitive priority system with meaningful colors
+
+### 🎯 Working Features Demonstrated
+- ✅ Task creation with title "Workout"
+- ✅ Priority assignment (Medium priority shown)
+- ✅ Due date functionality (08/08/2025)
+- ✅ Real-time statistics (1 total, 1 active, 0 completed)
+- ✅ Cross-screen navigation between Tasks and Analytics
+- ✅ Proper SafeArea handling for modern devices
+
+> **Note**: To add screenshots to your repository, create a `screenshots/` folder in the root directory and add your screen captures as `main-screen.png` and `analytics-screen.png`.
+
+## Live Demo
+
+The app is fully functional and demonstrates:
+
+1. **Task Management**: Create tasks like "Workout" with descriptions
+2. **Priority System**: Assign High, Medium, or Low priorities with color coding
+3. **Due Dates**: Set future dates (e.g., 08/08/2025) with custom date picker
+4. **Real-time Analytics**: Statistics update automatically as you manage tasks
+5. **Cross-platform**: Works on iOS, Android, and Web browsers
+6. **Persistent Storage**: Tasks are saved locally and persist between sessions
 
 ## Known Issues & Solutions
 
